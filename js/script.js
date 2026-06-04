@@ -111,3 +111,109 @@ function editTask(index){
 }
 
 renderTasks();
+
+let links = JSON.parse(localStorage.getItem("links")) || [];
+
+function saveLinks() {
+    localStorage.setItem(
+        "links",
+        JSON.stringify(links)
+    );
+}
+
+function renderLinks() {
+
+    const container =
+        document.getElementById("linksContainer");
+
+    container.innerHTML = "";
+
+    links.forEach((link,index) => {
+
+        const a =
+            document.createElement("a");
+
+        a.href = link.url;
+        a.target = "_blank";
+
+        a.innerText = link.name;
+
+        a.style.display = "inline-block";
+        a.style.margin = "5px";
+        a.style.padding = "10px";
+        a.style.background = "#6a5acd";
+        a.style.color = "white";
+        a.style.borderRadius = "8px";
+        a.style.textDecoration = "none";
+
+        const deleteBtn =
+            document.createElement("button");
+
+        deleteBtn.innerText = "X";
+
+        deleteBtn.onclick = () => {
+            deleteLink(index);
+        };
+
+        container.appendChild(a);
+        container.appendChild(deleteBtn);
+
+    });
+
+}
+
+function addLink() {
+
+    const name =
+        document.getElementById("linkName")
+        .value
+        .trim();
+
+    const url =
+        document.getElementById("linkUrl")
+        .value
+        .trim();
+
+    if(name === "" || url === ""){
+        alert("Please fill all fields");
+        return;
+    }
+
+    links.push({
+        name:name,
+        url:url
+    });
+
+    saveLinks();
+    renderLinks();
+
+    document.getElementById("linkName").value="";
+    document.getElementById("linkUrl").value="";
+
+}
+
+function deleteLink(index){
+
+    links.splice(index,1);
+
+    saveLinks();
+    renderLinks();
+
+}
+
+renderLinks();
+
+function toggleTheme(){
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "theme",
+        document.body.classList.contains("dark")
+    );
+
+}
+
+if(localStorage.getItem("theme")==="true"){
+    document.body.classList.add("dark");
+}
