@@ -1,82 +1,113 @@
-function updateClock(){
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-    const now = new Date();
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
-    document.getElementById("time").innerText =
-        now.toLocaleTimeString();
+function renderTasks() {
 
-    document.getElementById("date").innerText =
-        now.toDateString();
+    const taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
 
-    let hour = now.getHours();
+    tasks.forEach((task, index) => {
 
-    let greeting = "Good Evening";
+        const li = document.createElement("li");
 
-    if(hour < 12){
-        greeting = "Good Morning";
+        li.style.display = "flex";
+        li.style.alignItems = "center";
+        li.style.gap = "10px";
+        li.style.marginTop = "10px";
+
+        li.innerHTML = `
+            <input
+                type="checkbox"
+                ${task.completed ? "checked" : ""}
+                onchange="toggleTask(${index})"
+            >
+
+            <span style="
+                flex:1;
+                text-decoration:${task.completed ? "line-through" : "none"};
+            ">
+                ${task.text}
+            </span>
+
+            <button type="button" onclick="editTask(${index})">
+                Edit
+            </button>
+
+            <button type="button" onclick="deleteTask(${index})">
+                Delete
+            </button>
+        `;
+
+        taskList.appendChild(li);
+    });
+}
+
+function addTask() {
+
+    const input = document.getElementById("taskInput");
+    const text = input.value.trim();
+
+    if(text === ""){
+        return;
     }
-    else if(hour < 18){
-        greeting = "Good Afternoon";
+
+    if(tasks.some(task => task.text.toLowerCase() === text.toLowerCase())){
+        alert("Task already exists!");
+        return;
     }
 
-    let name =
-        localStorage.getItem("username") || "";
+    tasks.push({
+        text: text,
+        completed: false
+    });
 
-    document.getElementById("greeting").innerText =
-        greeting + (name ? ", " + name : "");
+    saveTasks();
+    renderTasks();
+
+    input.value = "";
 }
 
-setInterval(updateClock,1000);
-updateClock();
+function deleteTask(index){
 
-let timeLeft = 25 * 60;
-let timerInterval;
+    tasks.splice(index, 1);
 
-function updateTimerDisplay() {
-
-    let minutes = Math.floor(timeLeft / 60);
-    let seconds = timeLeft % 60;
-
-    document.getElementById("timer").innerText =
-        `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-
+    saveTasks();
+    renderTasks();
 }
 
-function startTimer() {
+function toggleTask(index){
 
-    if(timerInterval) return;
+    tasks[index].completed = !tasks[index].completed;
 
-    timerInterval = setInterval(() => {
-
-        if(timeLeft > 0) {
-            timeLeft--;
-            updateTimerDisplay();
-        } else {
-            clearInterval(timerInterval);
-            alert("Focus session completed!");
-        }
-
-    },1000);
-
+    saveTasks();
+    renderTasks();
 }
 
-function stopTimer() {
+function editTask(index){
 
-    clearInterval(timerInterval);
-    timerInterval = null;
+    const newTask = prompt(
+        "Edit Task:",
+        tasks[index].text
+    );
 
+    if(newTask === null){
+        return;
+    }
+
+    const trimmedTask = newTask.trim();
+
+    if(trimmedTask === ""){
+        alert("Task cannot be empty!");
+        return;
+    }
+
+    tasks[index].text = trimmedTask;
+
+    saveTasks();
+    renderTasks();
 }
 
-function resetTimer() {
-
-    clearInterval(timerInterval);
-
-    timerInterval = null;
-
-    timeLeft = 25 * 60;
-
-    updateTimerDisplay();
-
-}
-
-updateTimerDisplay();
+renderTasks();

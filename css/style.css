@@ -58,3 +58,17 @@ li{
 .dark .card{
     background:#333;
 }
+#taskList{
+    padding:0;
+}
+
+#taskList li{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:10px;
+}
+
+#taskList span{
+    flex:1;
+}
