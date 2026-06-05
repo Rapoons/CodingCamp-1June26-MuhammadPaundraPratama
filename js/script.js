@@ -1,3 +1,7 @@
+// =========================
+// TASKS
+// =========================
+
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 function saveTasks() {
@@ -7,6 +11,7 @@ function saveTasks() {
 function renderTasks() {
 
     const taskList = document.getElementById("taskList");
+
     taskList.innerHTML = "";
 
     tasks.forEach((task, index) => {
@@ -25,39 +30,39 @@ function renderTasks() {
                 onchange="toggleTask(${index})"
             >
 
-            <span style="
+            <span
+                style="
                 flex:1;
                 text-decoration:${task.completed ? "line-through" : "none"};
-            ">
+                "
+            >
                 ${task.text}
             </span>
 
-            <button type="button" onclick="editTask(${index})">
+            <button onclick="editTask(${index})">
                 Edit
             </button>
 
-            <button type="button" onclick="deleteTask(${index})">
+            <button onclick="deleteTask(${index})">
                 Delete
             </button>
         `;
 
         taskList.appendChild(li);
+
     });
+
 }
 
 function addTask() {
 
-    const input = document.getElementById("taskInput");
-    const text = input.value.trim();
+    const input =
+        document.getElementById("taskInput");
 
-    if(text === ""){
-        return;
-    }
+    const text =
+        input.value.trim();
 
-    if(tasks.some(task => task.text.toLowerCase() === text.toLowerCase())){
-        alert("Task already exists!");
-        return;
-    }
+    if (text === "") return;
 
     tasks.push({
         text: text,
@@ -68,57 +73,63 @@ function addTask() {
     renderTasks();
 
     input.value = "";
+
 }
 
-function deleteTask(index){
+function deleteTask(index) {
 
     tasks.splice(index, 1);
 
     saveTasks();
     renderTasks();
+
 }
 
-function toggleTask(index){
+function toggleTask(index) {
 
-    tasks[index].completed = !tasks[index].completed;
+    tasks[index].completed =
+        !tasks[index].completed;
 
     saveTasks();
     renderTasks();
+
 }
 
-function editTask(index){
+function editTask(index) {
 
     const newTask = prompt(
-        "Edit Task:",
+        "Edit Task",
         tasks[index].text
     );
 
-    if(newTask === null){
-        return;
-    }
+    if (newTask === null) return;
 
-    const trimmedTask = newTask.trim();
-
-    if(trimmedTask === ""){
-        alert("Task cannot be empty!");
-        return;
-    }
-
-    tasks[index].text = trimmedTask;
+    tasks[index].text =
+        newTask.trim();
 
     saveTasks();
     renderTasks();
+
 }
 
 renderTasks();
 
-let links = JSON.parse(localStorage.getItem("links")) || [];
+
+// =========================
+// QUICK LINKS
+// =========================
+
+let links =
+    JSON.parse(localStorage.getItem("links"))
+    || [];
 
 function saveLinks() {
+
     localStorage.setItem(
         "links",
         JSON.stringify(links)
     );
+
 }
 
 function renderLinks() {
@@ -128,7 +139,7 @@ function renderLinks() {
 
     container.innerHTML = "";
 
-    links.forEach((link,index) => {
+    links.forEach((link, index) => {
 
         const a =
             document.createElement("a");
@@ -174,27 +185,29 @@ function addLink() {
         .value
         .trim();
 
-    if(name === "" || url === ""){
+    if (!name || !url) {
+
         alert("Please fill all fields");
+
         return;
     }
 
     links.push({
-        name:name,
-        url:url
+        name,
+        url
     });
 
     saveLinks();
     renderLinks();
 
-    document.getElementById("linkName").value="";
-    document.getElementById("linkUrl").value="";
+    document.getElementById("linkName").value = "";
+    document.getElementById("linkUrl").value = "";
 
 }
 
-function deleteLink(index){
+function deleteLink(index) {
 
-    links.splice(index,1);
+    links.splice(index, 1);
 
     saveLinks();
     renderLinks();
@@ -203,7 +216,12 @@ function deleteLink(index){
 
 renderLinks();
 
-function toggleTheme(){
+
+// =========================
+// DARK MODE
+// =========================
+
+function toggleTheme() {
 
     document.body.classList.toggle("dark");
 
@@ -214,6 +232,178 @@ function toggleTheme(){
 
 }
 
-if(localStorage.getItem("theme")==="true"){
+if (
+    localStorage.getItem("theme") === "true"
+) {
     document.body.classList.add("dark");
 }
+
+
+// =========================
+// USERNAME
+// =========================
+
+function saveName() {
+
+    const username =
+        document.getElementById("username")
+        .value
+        .trim();
+
+    if (username === "") return;
+
+    localStorage.setItem(
+        "username",
+        username
+    );
+
+    updateClock();
+
+}
+
+const savedName =
+    localStorage.getItem("username");
+
+if (savedName) {
+
+    document.getElementById("username").value =
+        savedName;
+
+}
+
+
+// =========================
+// CLOCK
+// =========================
+
+function updateClock() {
+
+    const now = new Date();
+
+    const hours =
+        String(now.getHours())
+        .padStart(2, "0");
+
+    const minutes =
+        String(now.getMinutes())
+        .padStart(2, "0");
+
+    const seconds =
+        String(now.getSeconds())
+        .padStart(2, "0");
+
+    document.getElementById("time")
+        .textContent =
+        `${hours}:${minutes}:${seconds}`;
+
+    document.getElementById("date")
+        .textContent =
+        now.toLocaleDateString(
+            "en-US",
+            {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            }
+        );
+
+    let greeting =
+        Number(hours) < 12
+            ? "Good Morning"
+            : Number(hours) < 18
+            ? "Good Afternoon"
+            : "Good Evening";
+
+    const username =
+        localStorage.getItem("username");
+
+    if (username) {
+
+        greeting += `, ${username}`;
+
+    }
+
+    document.getElementById("greeting")
+        .textContent =
+        greeting;
+
+}
+
+setInterval(updateClock, 1000);
+
+updateClock();
+
+
+// =========================
+// FOCUS TIMER
+// =========================
+
+let timer;
+
+let timeLeft = 25 * 60;
+
+function updateTimerDisplay() {
+
+    const minutes =
+        Math.floor(timeLeft / 60);
+
+    const seconds =
+        timeLeft % 60;
+
+    document.getElementById(
+        "focusTimer"
+    ).textContent =
+        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+}
+
+function startTimer() {
+
+    if (timer) return;
+
+    timer = setInterval(() => {
+
+        if (timeLeft > 0) {
+
+            timeLeft--;
+
+            updateTimerDisplay();
+
+        } else {
+
+            clearInterval(timer);
+
+            timer = null;
+
+            alert(
+                "Focus Session Finished!"
+            );
+
+        }
+
+    }, 1000);
+
+}
+
+function stopTimer() {
+
+    clearInterval(timer);
+
+    timer = null;
+
+}
+
+function resetTimer() {
+
+    clearInterval(timer);
+
+    timer = null;
+
+    timeLeft = 25 * 60;
+
+    updateTimerDisplay();
+
+}
+
+updateTimerDisplay();

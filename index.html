@@ -11,48 +11,103 @@
 
 <div class="container">
 
+    <!-- Greeting -->
     <div class="card greeting-card">
-        <input type="text" id="username" placeholder="Enter your name">
-        <button onclick="saveName()">Save</button>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Enter your name"
+        >
+
+        <button onclick="saveName()">
+            Save
+        </button>
 
         <h1 id="time">00:00:00</h1>
+
         <p id="date"></p>
-        <h2 id="greeting">Good Morning</h2>
+
+        <h2 id="greeting">
+            Good Morning
+        </h2>
+
     </div>
 
+    <!-- Focus Timer -->
     <div class="card">
+
         <h2>Focus Timer</h2>
 
-        <h1 id="timer">25:00</h1>
+        <h1 id="focusTimer">25:00</h1>
 
-        <button onclick="startTimer()">Start</button>
-        <button onclick="stopTimer()">Stop</button>
-        <button onclick="resetTimer()">Reset</button>
+        <button onclick="startTimer()">
+            Start
+        </button>
+
+        <button onclick="stopTimer()">
+            Stop
+        </button>
+
+        <button onclick="resetTimer()">
+            Reset
+        </button>
+
     </div>
 
+    <!-- Tasks -->
     <div class="card">
+
         <h2>Tasks</h2>
 
-        <input type="text" id="taskInput" placeholder="Add task">
-        <button onclick="addTask()">Add</button>
+        <input
+            type="text"
+            id="taskInput"
+            placeholder="Add task"
+        >
+
+        <button onclick="addTask()">
+            Add
+        </button>
 
         <ul id="taskList"></ul>
+
     </div>
 
+    <!-- Quick Links -->
     <div class="card">
+
         <h2>Quick Links</h2>
 
-        <input type="text" id="linkName" placeholder="Link Name">
-        <input type="text" id="linkUrl" placeholder="URL">
+        <input
+            type="text"
+            id="linkName"
+            placeholder="Link Name"
+        >
 
-        <button onclick="addLink()">Add Link</button>
+        <input
+            type="text"
+            id="linkUrl"
+            placeholder="URL"
+        >
+
+        <button onclick="addLink()">
+            Add Link
+        </button>
 
         <div id="linksContainer"></div>
+
     </div>
 
+    <!-- Theme -->
     <div class="card">
+
         <h2>Theme</h2>
-        <button onclick="toggleTheme()">Dark / Light Mode</button>
+
+        <button onclick="toggleTheme()">
+            Dark / Light Mode
+        </button>
+
     </div>
 
 </div>
